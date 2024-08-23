@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 
 from nets.CSPdarknet import darknet53
+from nets.mobilenetv2 import mobile_with_connector
 
 
 def conv2d(filter_in, filter_out, kernel_size, stride=1):
@@ -84,7 +85,7 @@ def yolo_head(filters_list, in_filters):
 #   yolo_body
 #---------------------------------------------------#
 class YoloBody(nn.Module):
-    def __init__(self, anchors_mask, num_classes, pretrained = False):
+    def __init__(self, model: str, anchors_mask, num_classes, pretrained = False):
         super(YoloBody, self).__init__()
         #---------------------------------------------------#   
         #   生成CSPdarknet53的主干模型
@@ -93,7 +94,10 @@ class YoloBody(nn.Module):
         #   26,26,512
         #   13,13,1024
         #---------------------------------------------------#
-        self.backbone   = darknet53(pretrained)
+        if model == "cspdarknet53":
+            self.backbone = darknet53(pretrained)
+        elif model == "mobilenetv2_05":
+            self.backbone = mobile_with_connector(pretrained)
 
         self.conv1      = make_three_conv([512,1024],1024)
         self.SPP        = SpatialPyramidPooling()
