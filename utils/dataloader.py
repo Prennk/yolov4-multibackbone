@@ -250,7 +250,7 @@ class YoloDataset(Dataset):
             #---------------------------------#
             #   保存框的位置
             #---------------------------------#
-            box = np.array([np.array(list(map(int,box.split(',')))) for box in line_content[1:]])
+            box = np.array([np.array(list(map(float,box.split(',')))) for box in line_content[1:]])
             
             #---------------------------------#
             #   是否翻转图片
