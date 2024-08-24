@@ -1,7 +1,6 @@
+import torch
 import matplotlib.pyplot as plt
-import numpy as np
 import random
-import os
 from PIL import Image
 from collections import Counter
 from torch.utils.data import Dataset, DataLoader
@@ -113,4 +112,3 @@ print(f'Jumlah test_dataloader: {len(test_dataloader)}')
 for imgs, boxes in train_dataloader:
     print(f'Shape gambar batch pertama: {[img.shape for img in imgs]}')
     break
-gut
