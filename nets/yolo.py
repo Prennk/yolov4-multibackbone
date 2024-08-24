@@ -85,7 +85,7 @@ def yolo_head(filters_list, in_filters):
 #   yolo_body
 #---------------------------------------------------#
 class YoloBody(nn.Module):
-    def __init__(self, model: str, anchors_mask, num_classes, pretrained = False):
+    def __init__(self, backbone: str, anchors_mask, num_classes, pretrained_path):
         super(YoloBody, self).__init__()
         #---------------------------------------------------#   
         #   生成CSPdarknet53的主干模型
@@ -94,10 +94,10 @@ class YoloBody(nn.Module):
         #   26,26,512
         #   13,13,1024
         #---------------------------------------------------#
-        if model == "cspdarknet53":
-            self.backbone = darknet53(pretrained)
-        elif model == "mobilenetv2_05":
-            self.backbone = mobile_with_connector(pretrained)
+        if backbone == "cspdarknet53":
+            self.backbone = darknet53(pretrained_path)
+        elif backbone == "mobilenetv2_05":
+            self.backbone = mobile_with_connector(pretrained_path)
 
         self.conv1      = make_three_conv([512,1024],1024)
         self.SPP        = SpatialPyramidPooling()
