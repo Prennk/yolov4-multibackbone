@@ -78,7 +78,7 @@ class YoloDataset(Dataset):
         #------------------------------#
         #   获得预测框
         #------------------------------#
-        box     = np.array([np.array(list(map(int,box.split(',')))) for box in line[1:]])
+        box     = np.array([np.array(list(map(float,box.split(',')))) for box in line[1:]])
 
         if not random:
             scale = min(w/iw, h/ih)

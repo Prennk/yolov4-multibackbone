@@ -49,7 +49,7 @@ if __name__ == "__main__":
     #   Seed    用于固定随机种子
     #           使得每次独立训练都可以获得一样的结果
     #----------------------------------------------#
-    seed = 11
+    seed = 1
     #---------------------------------------------------------------------#
     #   distributed     用于指定是否使用单机多卡分布式运行
     #                   终端指令仅支持Ubuntu。CUDA_VISIBLE_DEVICES用于在Ubuntu下指定显卡。
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     #   classes_path    指向model_data下的txt，与自己训练的数据集相关 
     #                   训练前一定要修改classes_path，使其对应自己的数据集
     #---------------------------------------------------------------------#
-    classes_path    = 'model_data/voc_classes.txt'
+    classes_path    = 'model_data/tt100k_classes.txt'
     #---------------------------------------------------------------------#
     #   anchors_path    代表先验框对应的txt文件，一般不修改。
     #   anchors_mask    用于帮助代码找到对应的先验框，一般不修改。
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     #                   如果不设置model_path，pretrained = True，此时仅加载主干开始训练。
     #                   如果不设置model_path，pretrained = False，Freeze_Train = Fasle，此时从0开始训练，且没有冻结主干的过程。
     #----------------------------------------------------------------------------------------------------------------------------#
-    backbone        = "cspdarknet53"
+    backbone             = "mobilenetv2_05" # mobilenetv2_05 / cspdarknet53
     pretrained_path      = "model_data/mobilehalf_crd.pth"
     #------------------------------------------------------------------#
     #   mosaic              马赛克数据增强。
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     #                       (当Freeze_Train=False时失效)
     #------------------------------------------------------------------#
     Init_Epoch          = 0
-    Freeze_Epoch        = 50
+    Freeze_Epoch        = 0
     Freeze_batch_size   = 8
     #------------------------------------------------------------------#
     #   解冻阶段训练参数
@@ -270,8 +270,8 @@ if __name__ == "__main__":
     #   train_annotation_path   训练图片路径和标签
     #   val_annotation_path     验证图片路径和标签
     #------------------------------------------------------#
-    train_annotation_path   = '2007_train.txt'
-    val_annotation_path     = '2007_val.txt'
+    train_annotation_path   = 'train.txt'
+    val_annotation_path     = 'test.txt'
 
     seed_everything(seed)
     #------------------------------------------------------#
