@@ -1,7 +1,7 @@
 import json
 import os
 
-data_dir = "TT100K"
+data_dir = "TT100K/data"
 annotatons_file = os.path.join(data_dir, "annotations.json")
 train_dir = os.path.join(data_dir, "train")
 test_dir = os.path.join(data_dir, "test_dir")
