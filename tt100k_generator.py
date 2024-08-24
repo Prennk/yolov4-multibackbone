@@ -23,12 +23,15 @@ def create_txt(annotations_file, train_dir, test_dir, classes):
                 image_path = os.path.join(train_dir, image_info["path"])
                 line = image_path
 
-                for obj in image_info:
+                for obj in image_info["objects"]:
                     category = obj["category"]
                     if category in classes:
                         bbox = obj["bbox"]
-                        xmin, ymin, xmax, ymax = bbox
-                        line += f" {xmin},{ymin},{xmax},{ymax},{classes.index(category)}"
+                        xmin = bbox["xmin"]
+                        ymin = bbox["ymin"]
+                        xmax = bbox["xmax"]
+                        ymax = bbox["ymax"]
+                        line += f" {xmin},{ymin},{xmax},{ymax},{classes.index(category)},"
 
                 f.write(line + "\n")
 
