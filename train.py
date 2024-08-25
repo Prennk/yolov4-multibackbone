@@ -520,7 +520,7 @@ if __name__ == "__main__":
                 checkpoint = torch.load(checkpoint_path)
                 model.load_state_dict(checkpoint["model_state_dict"])
                 optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-                Init_Epoch = checkpoint["epoch"]
+                Init_Epoch = checkpoint["epoch"] + 1
         else:
             print("START NEW TRAIN")
 
