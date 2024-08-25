@@ -115,8 +115,8 @@ if __name__ == "__main__":
     #----------------------------------------------------------------------------------------------------------------------------#
     backbone             = "mobilenetv2_05" # mobilenetv2_05 / cspdarknet53
     pretrained_path      = "model_data/mobilehalf_crd.pth"
-    resume               = False
-    checkpoint_path      = ""
+    resume               = True
+    checkpoint_path      = "logs/loss_mobilenetv2_05/checkpoint.pth"
     #------------------------------------------------------------------#
     #   mosaic              马赛克数据增强。
     #   mosaic_prob         每个step有多少概率使用mosaic数据增强，默认50%。
