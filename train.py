@@ -80,7 +80,7 @@ if __name__ == "__main__":
     #   anchors_path    代表先验框对应的txt文件，一般不修改。
     #   anchors_mask    用于帮助代码找到对应的先验框，一般不修改。
     #---------------------------------------------------------------------#
-    anchors_path    = 'model_data/yolo_anchors.txt'
+    anchors_path    = 'model_data/tt100k_anchors.txt'
     anchors_mask    = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
     #----------------------------------------------------------------------------------------------------------------------------#
     #   权值文件的下载请看README，可以通过网盘下载。模型的 预训练权重 对不同数据集是通用的，因为特征是通用的。
@@ -115,6 +115,8 @@ if __name__ == "__main__":
     #----------------------------------------------------------------------------------------------------------------------------#
     backbone             = "mobilenetv2_05" # mobilenetv2_05 / cspdarknet53
     pretrained_path      = "model_data/mobilehalf_crd.pth"
+    resume               = False
+    checkpoint_path      = ""
     #------------------------------------------------------------------#
     #   mosaic              马赛克数据增强。
     #   mosaic_prob         每个step有多少概率使用mosaic数据增强，默认50%。
@@ -258,7 +260,7 @@ if __name__ == "__main__":
     #   （二）此处设置评估参数较为保守，目的是加快评估速度。
     #------------------------------------------------------------------#
     eval_flag           = True
-    eval_period         = 10
+    eval_period         = 1
     #------------------------------------------------------------------#
     #   num_workers     用于设置是否使用多线程读取数据
     #                   开启后会加快数据读取速度，但是会占用更多内存
@@ -482,6 +484,9 @@ if __name__ == "__main__":
         val_dataset     = YoloDataset(val_lines, input_shape, num_classes, epoch_length = UnFreeze_Epoch, \
                                         mosaic=False, mixup=False, mosaic_prob=0, mixup_prob=0, train=False, special_aug_ratio=0)
         
+        print(f"Num of train set: {len(train_dataset)}")
+        print(f"Num of test set: {len(val_dataset)}")
+        
         if distributed:
             train_sampler   = torch.utils.data.distributed.DistributedSampler(train_dataset, shuffle=True,)
             val_sampler     = torch.utils.data.distributed.DistributedSampler(val_dataset, shuffle=False,)
@@ -508,6 +513,17 @@ if __name__ == "__main__":
         else:
             eval_callback   = None
         
+        if resume:
+            if os.path.exists(checkpoint_path):
+                print("CONTINUE TRAIN")
+                print(f"Loading checkpoint from {checkpoint_path}")
+                checkpoint = torch.load(checkpoint_path)
+                model.load_state_dict(checkpoint["model_state_dict"])
+                optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+                Init_Epoch = checkpoint["epoch"]
+        else:
+            print("START NEW TRAIN")
+
         #---------------------------------------#
         #   开始模型训练
         #---------------------------------------#

@@ -3,6 +3,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
+import os
 
 def cas_iou(box, cluster):
     x = np.minimum(cluster[:, 0], box[0])
@@ -48,30 +49,32 @@ def kmeans(box, k):
     return cluster, near
 
 def load_data(path):
+    data_dir = "TT100K/data"
     data = []
-    json_files = glob.glob('{}/*.json'.format(path))
-    
-    # Memproses setiap file JSON
-    for json_file in tqdm(json_files):
-        with open(json_file, 'r') as f:
-            json_data = json.load(f)
+    image_width = 2048
+    image_height = 2048
+
+    with open(path, "r") as f:
+        annotations = json.load(f)
+
+    image_list = [img for img in annotations["imgs"] if annotations["imgs"][img]["path"].startswith("train")]
+
+    for image_id in image_list:
+        image_info = annotations["imgs"][image_id]
+        image_path = os.path.join(data_dir, image_info["path"])
+
+        for obj in image_info["objects"]:
+            bbox = obj["bbox"]
+            xmin = bbox["xmin"]
+            ymin = bbox["ymin"]
+            xmax = bbox["xmax"]
+            ymax = bbox["ymax"]
         
-        # Mendapatkan ukuran gambar dari path atau field lain (jika ada)
-        image_width = 2048  # Update ini sesuai ukuran dataset TT100K
-        image_height = 2048 # Update ini sesuai ukuran dataset TT100K
-        
-        # Mendapatkan informasi bounding box
-        for obj in json_data['annotations']:
-            bbox = obj['bbox']
-            xmin, ymin, xmax, ymax = bbox
-            
-            # Normalisasi bounding box berdasarkan ukuran gambar
             xmin /= image_width
             ymin /= image_height
             xmax /= image_width
             ymax /= image_height
             
-            # Mendapatkan lebar dan tinggi bounding box
             data.append([xmax - xmin, ymax - ymin])
     
     return np.array(data)
@@ -81,8 +84,7 @@ if __name__ == '__main__':
     input_shape = [416, 416]
     anchors_num = 9
     
-    # Ubah path untuk menggunakan dataset TT100K
-    path = 'path/to/TT100K/annotations'
+    path = 'TT100K/data/annotations.json'
     
     print('Load JSON annotations.')
     data = load_data(path)
@@ -105,7 +107,7 @@ if __name__ == '__main__':
     print('avg_ratio:{:.2f}'.format(avg_iou(data, cluster)))
     print(cluster)
 
-    with open("yolo_anchors.txt", 'w') as f:
+    with open("tt100k_anchors.txt", 'w') as f:
         for i in range(cluster.shape[0]):
             if i == 0:
                 x_y = "%d,%d" % (cluster[i][0], cluster[i][1])
