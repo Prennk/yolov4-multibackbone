@@ -521,6 +521,8 @@ if __name__ == "__main__":
                 model.load_state_dict(checkpoint["model_state_dict"])
                 optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
                 Init_Epoch = checkpoint["epoch"] + 1
+                print(f"Optimizer: {optimizer}")
+                print(f"Init Epoch: {Init_Epoch}")
         else:
             print("START NEW TRAIN")
 
