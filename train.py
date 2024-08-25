@@ -342,8 +342,8 @@ if __name__ == "__main__":
     #   记录Loss
     #----------------------#
     if local_rank == 0:
-        time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
-        log_dir         = os.path.join(save_dir, "loss_" + str(time_str))
+        # time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
+        log_dir         = os.path.join(save_dir, "loss_" + backbone)
         loss_history    = LossHistory(log_dir, model, input_shape=input_shape)
     else:
         loss_history    = None
