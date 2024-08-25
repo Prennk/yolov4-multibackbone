@@ -27,18 +27,18 @@ def create_txt(annotations_file, train_dir, test_dir, classes):
                     category = obj["category"]
                     if category in classes:
                         bbox = obj["bbox"]
-                        xmin = bbox["xmin"]
-                        ymin = bbox["ymin"]
-                        xmax = bbox["xmax"]
-                        ymax = bbox["ymax"]
+                        xmin = int(bbox["xmin"])
+                        ymin = int(bbox["ymin"])
+                        xmax = int(bbox["xmax"])
+                        ymax = int(bbox["ymax"])
                         line += f" {xmin},{ymin},{xmax},{ymax},{classes.index(category)}"
                         
                 print(line)
                 f.write(line + "\n")
 
-    train_images = [img for img in annotations["imgs"] if annotations["imgs"][img]["path"].startswith("train")]
+    train_images = open(data_dir + "/train/ids.txt").read().splitlines()
     print(f"train images count: {len(train_images)}")
-    test_images = [img for img in annotations["imgs"] if annotations["imgs"][img]["path"].startswith("test")]
+    test_images = open(data_dir + "/test/ids.txt").read().splitlines()
     print(f"test images count: {len(test_images)}")
 
     create_file("train.txt", train_images, annotations)
