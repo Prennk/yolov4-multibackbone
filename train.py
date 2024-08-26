@@ -114,9 +114,9 @@ if __name__ == "__main__":
     #                   如果不设置model_path，pretrained = False，Freeze_Train = Fasle，此时从0开始训练，且没有冻结主干的过程。
     #----------------------------------------------------------------------------------------------------------------------------#
     backbone             = "mobilenetv2_05" # mobilenetv2_05 / cspdarknet53
-    pretrained_path      = "model_data/mobilehalf_crd.pth"
-    resume               = True
-    checkpoint_path      = "logs/loss_mobilenetv2_05/checkpoint.pth"
+    pretrained_path      = ""
+    resume               = False
+    checkpoint_path      = ""
     #------------------------------------------------------------------#
     #   mosaic              马赛克数据增强。
     #   mosaic_prob         每个step有多少概率使用mosaic数据增强，默认50%。

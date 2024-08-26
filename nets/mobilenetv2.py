@@ -222,8 +222,8 @@ class MobileNetV2WithConnectorToNeck(nn.Module):
         return f2_downsampled, f3_downsampled, f4_downsampled
 
 def mobile_with_connector(pretrained_path):
+    model = MobileNetV2WithConnectorToNeck()
     if pretrained_path:
-        model = MobileNetV2WithConnectorToNeck()
         state_dict = torch.load("model_data/mobilehalf_crd.pth")
         print(f"Loading mobilenetv2 0.5 backbone weights in {pretrained_path}.....")
         model.mobilenetv2.load_state_dict(state_dict["model"])
