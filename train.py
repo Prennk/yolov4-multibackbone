@@ -260,7 +260,7 @@ if __name__ == "__main__":
     #   （二）此处设置评估参数较为保守，目的是加快评估速度。
     #------------------------------------------------------------------#
     eval_flag           = True
-    eval_period         = 1
+    eval_period         = 10
     #------------------------------------------------------------------#
     #   num_workers     用于设置是否使用多线程读取数据
     #                   开启后会加快数据读取速度，但是会占用更多内存
@@ -343,7 +343,8 @@ if __name__ == "__main__":
     #----------------------#
     if local_rank == 0:
         # time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
-        log_dir         = os.path.join(save_dir, "loss_" + backbone)
+        log_pretrained_path = "_" + pretrained_path if pretrained_path != "" else pretrained_path
+        log_dir         = os.path.join(save_dir, "loss_" + backbone + log_pretrained_path)
         loss_history    = LossHistory(log_dir, model, input_shape=input_shape)
     else:
         loss_history    = None
