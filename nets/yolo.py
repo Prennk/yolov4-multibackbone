@@ -5,7 +5,7 @@ import torch.nn as nn
 
 from nets.CSPdarknet import darknet53
 from nets.mobilenetv2 import mobile_with_connector
-from nets.repvit import repvit_m0_6, repvit_m0_9
+from nets.repvit import RepViT_M0_6_With_Connector
 
 
 def conv2d(filter_in, filter_out, kernel_size, stride=1):
@@ -100,9 +100,7 @@ class YoloBody(nn.Module):
         elif backbone == "mobilenetv2_05":
             self.backbone = mobile_with_connector(pretrained_path)
         elif backbone == "repvit_m0_6":
-            self.backbone = repvit_m0_6(num_classes=100)
-        elif backbone == "repvit_m0_9":
-            self.backbone = repvit_m0_9(num_classes=100)
+            self.backbone = RepViT_M0_6_With_Connector()
         
 
         self.conv1      = make_three_conv([512,1024],1024)

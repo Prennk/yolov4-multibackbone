@@ -75,12 +75,12 @@ if __name__ == "__main__":
     #   classes_path    指向model_data下的txt，与自己训练的数据集相关 
     #                   训练前一定要修改classes_path，使其对应自己的数据集
     #---------------------------------------------------------------------#
-    classes_path    = 'model_data/tt100k_classes.txt'
+    classes_path    = 'classes/road_sign_classes.txt'
     #---------------------------------------------------------------------#
     #   anchors_path    代表先验框对应的txt文件，一般不修改。
     #   anchors_mask    用于帮助代码找到对应的先验框，一般不修改。
     #---------------------------------------------------------------------#
-    anchors_path    = 'model_data/tt100k_anchors.txt'
+    anchors_path    = 'anchors/road_sign_anchors.txt'
     anchors_mask    = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
     #----------------------------------------------------------------------------------------------------------------------------#
     #   权值文件的下载请看README，可以通过网盘下载。模型的 预训练权重 对不同数据集是通用的，因为特征是通用的。
@@ -113,11 +113,11 @@ if __name__ == "__main__":
     #                   如果不设置model_path，pretrained = True，此时仅加载主干开始训练。
     #                   如果不设置model_path，pretrained = False，Freeze_Train = Fasle，此时从0开始训练，且没有冻结主干的过程。
     #----------------------------------------------------------------------------------------------------------------------------#
-    backbone             = "mobilenetv2_05" # mobilenetv2_05 / cspdarknet53
-    str_pretrained_path  = "model_data/mobilehalf_crd.pth"
+    backbone             = "repvit_m0_6" # repvit_m0_6 / mobilenetv2_05 / cspdarknet53
+    str_pretrained_path  = ""
     pretrained_path      = ""
-    resume               = True
-    checkpoint_path      = "logs/loss_mobilenetv2_05_mobilehalf_crd/checkpoint.pth"
+    resume               = False
+    checkpoint_path      = ""
     #------------------------------------------------------------------#
     #   mosaic              马赛克数据增强。
     #   mosaic_prob         每个step有多少概率使用mosaic数据增强，默认50%。
@@ -199,13 +199,13 @@ if __name__ == "__main__":
     #                           Adam可以使用相对较小的UnFreeze_Epoch
     #   Unfreeze_batch_size     模型在解冻后的batch_size
     #------------------------------------------------------------------#
-    UnFreeze_Epoch      = 800
+    UnFreeze_Epoch      = 600
     Unfreeze_batch_size = 16
     #------------------------------------------------------------------#
     #   Freeze_Train    是否进行冻结训练
     #                   默认先冻结主干训练后解冻训练。
     #------------------------------------------------------------------#
-    Freeze_Train        = True
+    Freeze_Train        = False
     
     #------------------------------------------------------------------#
     #   其它训练参数：学习率、优化器、学习率下降有关
@@ -273,8 +273,8 @@ if __name__ == "__main__":
     #   train_annotation_path   训练图片路径和标签
     #   val_annotation_path     验证图片路径和标签
     #------------------------------------------------------#
-    train_annotation_path   = 'train.txt'
-    val_annotation_path     = 'test.txt'
+    train_annotation_path   = 'annotations/road_sign_train.txt'
+    val_annotation_path     = 'annotations/road_sign_val.txt'
 
     seed_everything(seed)
     #------------------------------------------------------#
@@ -450,12 +450,16 @@ if __name__ == "__main__":
         #---------------------------------------#
         pg0, pg1, pg2 = [], [], []  
         for k, v in model.named_modules():
+            if isinstance(v, nn.Identity):
+                print(f"Skipping Identity module: {k}")
+                continue
             if hasattr(v, "bias") and isinstance(v.bias, nn.Parameter):
                 pg2.append(v.bias)    
             if isinstance(v, nn.BatchNorm2d) or "bn" in k:
-                pg0.append(v.weight)    
+                if hasattr(v, "weight") and isinstance(v.weight, nn.Parameter):
+                    pg0.append(v.weight)
             elif hasattr(v, "weight") and isinstance(v.weight, nn.Parameter):
-                pg1.append(v.weight)   
+                pg1.append(v.weight)  
         optimizer = {
             'adam'  : optim.Adam(pg0, Init_lr_fit, betas = (momentum, 0.999)),
             'adamw' : optim.AdamW(pg0, Init_lr_fit, betas = (momentum, 0.999)),
