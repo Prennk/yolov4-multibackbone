@@ -114,9 +114,10 @@ if __name__ == "__main__":
     #                   如果不设置model_path，pretrained = False，Freeze_Train = Fasle，此时从0开始训练，且没有冻结主干的过程。
     #----------------------------------------------------------------------------------------------------------------------------#
     backbone             = "mobilenetv2_05" # mobilenetv2_05 / cspdarknet53
+    str_pretrained_path  = "model_data/mobilehalf_crd.pth"
     pretrained_path      = ""
-    resume               = False
-    checkpoint_path      = ""
+    resume               = True
+    checkpoint_path      = "logs/loss_mobilenetv2_05_mobilehalf_crd/checkpoint.pth"
     #------------------------------------------------------------------#
     #   mosaic              马赛克数据增强。
     #   mosaic_prob         每个step有多少概率使用mosaic数据增强，默认50%。
@@ -198,7 +199,7 @@ if __name__ == "__main__":
     #                           Adam可以使用相对较小的UnFreeze_Epoch
     #   Unfreeze_batch_size     模型在解冻后的batch_size
     #------------------------------------------------------------------#
-    UnFreeze_Epoch      = 300
+    UnFreeze_Epoch      = 800
     Unfreeze_batch_size = 16
     #------------------------------------------------------------------#
     #   Freeze_Train    是否进行冻结训练
@@ -343,7 +344,7 @@ if __name__ == "__main__":
     #----------------------#
     if local_rank == 0:
         # time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
-        log_pretrained_path = "_" + pretrained_path if pretrained_path != "" else pretrained_path
+        log_pretrained_path = "_" + os.path.splitext(os.path.basename(str_pretrained_path))[0] if str_pretrained_path != "" else str_pretrained_path
         log_dir         = os.path.join(save_dir, "loss_" + backbone + log_pretrained_path)
         loss_history    = LossHistory(log_dir, model, input_shape=input_shape)
     else:
