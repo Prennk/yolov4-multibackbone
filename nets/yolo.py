@@ -5,6 +5,7 @@ import torch.nn as nn
 
 from nets.CSPdarknet import darknet53
 from nets.mobilenetv2 import mobile_with_connector
+from nets.repvit import repvit_m0_6, repvit_m0_9
 
 
 def conv2d(filter_in, filter_out, kernel_size, stride=1):
@@ -98,6 +99,11 @@ class YoloBody(nn.Module):
             self.backbone = darknet53(pretrained_path)
         elif backbone == "mobilenetv2_05":
             self.backbone = mobile_with_connector(pretrained_path)
+        elif backbone == "repvit_m0_6":
+            self.backbone = repvit_m0_6(num_classes=100)
+        elif backbone == "repvit_m0_9":
+            self.backbone = repvit_m0_9(num_classes=100)
+        
 
         self.conv1      = make_three_conv([512,1024],1024)
         self.SPP        = SpatialPyramidPooling()
