@@ -514,7 +514,7 @@ def repvit_m2_3(pretrained=False, num_classes = 1000, distillation=False):
 class RepViT_M0_6_With_Connector(nn.Module):
     def __init__(self):
         super(RepViT_M0_6_With_Connector, self).__init__()
-        self.model = repvit_m0_6(num_classes=100)
+        self.model_without_connector = repvit_m0_6(num_classes=100)
         self.regressor1 = nn.Sequential(
             nn.Conv2d(80, 256, kernel_size=1, stride=1, padding=0, bias=False),
             nn.BatchNorm2d(256),
@@ -533,7 +533,7 @@ class RepViT_M0_6_With_Connector(nn.Module):
 
 
     def forward(self, x):
-        x1, x2, x3 = self.model(x, is_feat=True)
+        x1, x2, x3 = self.model_without_connector(x, is_feat=True)
         x1 = self.regressor1(x1)
         x2 = self.regressor2(x2)
         x3 = self.regressor3(x3)
