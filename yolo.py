@@ -18,6 +18,8 @@ from utils.utils_bbox import DecodeBox, DecodeBoxNP
 '''
 class YOLO(object):
     _defaults = {
+        "backbone"        : 'repvit_m0_6',
+        "pretrained_path" : '',
         #--------------------------------------------------------------------------#
         #   使用自己训练好的模型进行预测一定要修改model_path和classes_path！
         #   model_path指向logs文件夹下的权值文件，classes_path指向model_data下的txt
@@ -26,13 +28,13 @@ class YOLO(object):
         #   验证集损失较低不代表mAP较高，仅代表该权值在验证集上泛化性能较好。
         #   如果出现shape不匹配，同时要注意训练时的model_path和classes_path参数的修改
         #--------------------------------------------------------------------------#
-        "model_path"        : 'model_data/yolo4_weights.pth',
-        "classes_path"      : 'model_data/coco_classes.txt',
+        "model_path"        : 'logs/loss_repvit_m0_6_road_sign_seed42_repvit_m0_6_vanilla_32/best_epoch_weights.pth',
+        "classes_path"      : 'classes/road_sign_classes.txt',
         #---------------------------------------------------------------------#
         #   anchors_path代表先验框对应的txt文件，一般不修改。
         #   anchors_mask用于帮助代码找到对应的先验框，一般不修改。
         #---------------------------------------------------------------------#
-        "anchors_path"      : 'model_data/yolo_anchors.txt',
+        "anchors_path"      : 'anchors/road_sign_anchors.txt',
         "anchors_mask"      : [[6, 7, 8], [3, 4, 5], [0, 1, 2]],
         #---------------------------------------------------------------------#
         #   输入图片的大小，必须为32的倍数。
@@ -98,7 +100,7 @@ class YOLO(object):
         #---------------------------------------------------#
         #   建立yolo模型，载入yolo模型的权重
         #---------------------------------------------------#
-        self.net    = YoloBody(self.anchors_mask, self.num_classes)
+        self.net    = YoloBody(self.backbone, self.anchors_mask, self.num_classes, self.pretrained_path)
         device      = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.net.load_state_dict(torch.load(self.model_path, map_location=device))
         self.net    = self.net.eval()
@@ -424,12 +426,12 @@ class YOLO_ONNX(object):
         #   如果出现shape不匹配，同时要注意训练时的onnx_path和classes_path参数的修改
         #--------------------------------------------------------------------------#
         "onnx_path"         : 'model_data/models.onnx',
-        "classes_path"      : 'model_data/coco_classes.txt',
+        "classes_path"      : 'classes/road_sign_classes.txt',
         #---------------------------------------------------------------------#
         #   anchors_path代表先验框对应的txt文件，一般不修改。
         #   anchors_mask用于帮助代码找到对应的先验框，一般不修改。
         #---------------------------------------------------------------------#
-        "anchors_path"      : 'model_data/yolo_anchors.txt',
+        "anchors_path"      : 'anchors/road_sign_anchors.txt',
         "anchors_mask"      : [[6, 7, 8], [3, 4, 5], [0, 1, 2]],
         #---------------------------------------------------------------------#
         #   输入图片的大小，必须为32的倍数。

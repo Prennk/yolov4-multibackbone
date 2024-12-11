@@ -1,0 +1,9 @@
+Model pretrained ada di https://drive.google.com/drive/folders/1M2pbYwT3yix2_WkysloL3Vo5_ReUuiGb?usp=sharing
+Requirements ada di requirement.txt
+
+1. Inferensi menggunakan kode predict.py
+2. Pada predict.py, ubah [predict.py | line 24] mode = "fps"
+3. Gambar yang akan digunakan untuk pengukuran path-nya ditaruh di [predict.py | line 52] fps_image_path
+4. Untuk load model pretrained yolo ada di yolo.py [yolo.py | line 31] "model_path"
+5. Harap ganti [yolo.py | line 32] "classes_path" menyesuaikan model_path yang dipakai. Walaupun gak berpengaruh pada kecepatan tapi klo gak diubah nanti size mismatch
+6. Sama seperti no. 5 tapi [yolo.py | line 37] "anchors_path"

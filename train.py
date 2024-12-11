@@ -40,6 +40,29 @@ from utils.utils_fit import fit_one_epoch
    如果只是训练了几个Step是不会保存的，Epoch和Step的概念要捋清楚一下。
 '''
 if __name__ == "__main__":
+    seed = [11, 37, 42, 50, 100]
+    classes_path = ["classes/road_sign_classes.txt", "classes/license_plate_classes.txt"]
+    anchors_path = ["anchors/road_sign_anchors.txt", "anchors/license_plate_anchors.txt"]
+    model_path = ["", "pretrained/repvit_m0_6_vanilla_32.pth", "pretrained/repvit_m0_6_crd_32.pth"]
+    str_pretrained_path = ["", "repvit_m0_6_vanilla_32", "repvit_m0_6_crd_32"]
+    Freeze_Epoch = [300, 600]
+    UnFreeze_Epoch = [600, 1200]
+    Freeze_Train = [False, True]
+    dataset_name = ["road_sign", "license_plate"]
+    train_annotation_path = ["annotations/road_sign_train.txt", "annotations/license_plate_train.txt"]
+    val_annotation_path = ["annotations/road_sign_val.txt", "annotations/license_plate_val.txt"]
+
+    seed = seed[3]
+    classes_path = classes_path[1]
+    anchors_path = anchors_path[1]
+    model_path = model_path[1]
+    str_pretrained_path = str_pretrained_path[1]
+    Freeze_Epoch = Freeze_Epoch[1]
+    UnFreeze_Epoch = UnFreeze_Epoch[1]
+    Freeze_Train = Freeze_Train[1]
+    dataset_name = dataset_name[1]
+    train_annotation_path = train_annotation_path[1]
+    val_annotation_path = val_annotation_path[1]
     #---------------------------------#
     #   Cuda    是否使用Cuda
     #           没有GPU可以设置成False
@@ -49,7 +72,7 @@ if __name__ == "__main__":
     #   Seed    用于固定随机种子
     #           使得每次独立训练都可以获得一样的结果
     #----------------------------------------------#
-    seed = 1
+    seed = seed
     #---------------------------------------------------------------------#
     #   distributed     用于指定是否使用单机多卡分布式运行
     #                   终端指令仅支持Ubuntu。CUDA_VISIBLE_DEVICES用于在Ubuntu下指定显卡。
@@ -75,12 +98,12 @@ if __name__ == "__main__":
     #   classes_path    指向model_data下的txt，与自己训练的数据集相关 
     #                   训练前一定要修改classes_path，使其对应自己的数据集
     #---------------------------------------------------------------------#
-    classes_path    = 'classes/road_sign_classes.txt'
+    classes_path    = classes_path
     #---------------------------------------------------------------------#
     #   anchors_path    代表先验框对应的txt文件，一般不修改。
     #   anchors_mask    用于帮助代码找到对应的先验框，一般不修改。
     #---------------------------------------------------------------------#
-    anchors_path    = 'anchors/road_sign_anchors.txt'
+    anchors_path    = anchors_path
     anchors_mask    = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
     #----------------------------------------------------------------------------------------------------------------------------#
     #   权值文件的下载请看README，可以通过网盘下载。模型的 预训练权重 对不同数据集是通用的，因为特征是通用的。
@@ -102,7 +125,7 @@ if __name__ == "__main__":
     #      可以设置mosaic=True，直接随机初始化参数开始训练，但得到的效果仍然不如有预训练的情况。（像COCO这样的大数据集可以这样做）
     #   2、了解imagenet数据集，首先训练分类模型，获得网络的主干部分权值，分类模型的 主干部分 和该模型通用，基于此进行训练。
     #----------------------------------------------------------------------------------------------------------------------------#
-    model_path      = ''
+    model_path      = model_path
     #------------------------------------------------------#
     #   input_shape     输入的shape大小，一定要是32的倍数
     #------------------------------------------------------#
@@ -114,7 +137,7 @@ if __name__ == "__main__":
     #                   如果不设置model_path，pretrained = False，Freeze_Train = Fasle，此时从0开始训练，且没有冻结主干的过程。
     #----------------------------------------------------------------------------------------------------------------------------#
     backbone             = "repvit_m0_6" # repvit_m0_6 / mobilenetv2_05 / cspdarknet53
-    str_pretrained_path  = ""
+    str_pretrained_path  = str_pretrained_path
     pretrained_path      = ""
     resume               = False
     checkpoint_path      = ""
@@ -188,7 +211,7 @@ if __name__ == "__main__":
     #                       (当Freeze_Train=False时失效)
     #------------------------------------------------------------------#
     Init_Epoch          = 0
-    Freeze_Epoch        = 0
+    Freeze_Epoch        = Freeze_Epoch
     Freeze_batch_size   = 16
     #------------------------------------------------------------------#
     #   解冻阶段训练参数
@@ -199,13 +222,13 @@ if __name__ == "__main__":
     #                           Adam可以使用相对较小的UnFreeze_Epoch
     #   Unfreeze_batch_size     模型在解冻后的batch_size
     #------------------------------------------------------------------#
-    UnFreeze_Epoch      = 600
+    UnFreeze_Epoch      = UnFreeze_Epoch
     Unfreeze_batch_size = 16
     #------------------------------------------------------------------#
     #   Freeze_Train    是否进行冻结训练
     #                   默认先冻结主干训练后解冻训练。
     #------------------------------------------------------------------#
-    Freeze_Train        = False
+    Freeze_Train        = Freeze_Train
     
     #------------------------------------------------------------------#
     #   其它训练参数：学习率、优化器、学习率下降有关
@@ -273,8 +296,9 @@ if __name__ == "__main__":
     #   train_annotation_path   训练图片路径和标签
     #   val_annotation_path     验证图片路径和标签
     #------------------------------------------------------#
-    train_annotation_path   = 'annotations/road_sign_train.txt'
-    val_annotation_path     = 'annotations/road_sign_val.txt'
+    dataset_name            = dataset_name
+    train_annotation_path   = train_annotation_path
+    val_annotation_path     = val_annotation_path
 
     seed_everything(seed)
     #------------------------------------------------------#
@@ -316,8 +340,9 @@ if __name__ == "__main__":
         #------------------------------------------------------#
         #   根据预训练权重的Key和模型的Key进行加载
         #------------------------------------------------------#
-        model_dict      = model.state_dict()
+        model_dict      = model.backbone.model_without_connector.state_dict()
         pretrained_dict = torch.load(model_path, map_location = device)
+        pretrained_dict = pretrained_dict["model"]
         load_key, no_load_key, temp_dict = [], [], {}
         for k, v in pretrained_dict.items():
             if k in model_dict.keys() and np.shape(model_dict[k]) == np.shape(v):
@@ -326,7 +351,7 @@ if __name__ == "__main__":
             else:
                 no_load_key.append(k)
         model_dict.update(temp_dict)
-        model.load_state_dict(model_dict)
+        model.backbone.model_without_connector.load_state_dict(model_dict)
         #------------------------------------------------------#
         #   显示没有匹配上的Key
         #------------------------------------------------------#
@@ -345,7 +370,7 @@ if __name__ == "__main__":
     if local_rank == 0:
         # time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
         log_pretrained_path = "_" + os.path.splitext(os.path.basename(str_pretrained_path))[0] if str_pretrained_path != "" else str_pretrained_path
-        log_dir         = os.path.join(save_dir, "loss_" + backbone + log_pretrained_path)
+        log_dir         = os.path.join(save_dir, "loss_" + backbone + "_" + dataset_name + "_" + "seed" + str(seed) + log_pretrained_path)
         loss_history    = LossHistory(log_dir, model, input_shape=input_shape)
     else:
         loss_history    = None
