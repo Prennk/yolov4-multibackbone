@@ -7,3 +7,7 @@ Requirements ada di requirement.txt
 4. Untuk load model pretrained yolo ada di yolo.py [yolo.py | line 31] "model_path"
 5. Harap ganti [yolo.py | line 32] "classes_path" menyesuaikan model_path yang dipakai. Walaupun gak berpengaruh pada kecepatan tapi klo gak diubah nanti size mismatch
 6. Sama seperti no. 5 tapi [yolo.py | line 37] "anchors_path"
+7. Hasil kode predict.py akan seperti ini
+⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇
+0.03873197793960571 seconds, 25.818459402184093FPS, @batch_size 1
+⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆
