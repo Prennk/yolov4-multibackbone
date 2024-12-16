@@ -15,7 +15,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 
 from nets.yolo_crosskd import YoloBody
-from nets.yolo_training import (YOLOLoss, get_lr_scheduler, set_optimizer_lr,
+from nets.yolo_training_crosskd import (YOLOLoss, get_lr_scheduler, set_optimizer_lr,
                                 weights_init)
 from utils.callbacks import EvalCallback, LossHistory
 from utils.dataloader import YoloDataset, yolo_dataset_collate
@@ -323,7 +323,7 @@ if __name__ == "__main__":
         #------------------------------------------------------#
         model_dict      = teacher_model.state_dict()
         pretrained_dict = torch.load(teacher_model_path, map_location = device)
-        pretrained_dict = pretrained_dict["model_state_dict"]
+        # pretrained_dict = pretrained_dict["model_state_dict"]
         load_key, no_load_key, temp_dict = [], [], {}
         for k, v in pretrained_dict.items():
             if k in model_dict.keys() and np.shape(model_dict[k]) == np.shape(v):
