@@ -417,10 +417,15 @@ if __name__ == "__main__":
             #----------------------------#
             student_model_train = student_model_train.cuda(local_rank)
             student_model_train = torch.nn.parallel.DistributedDataParallel(student_model_train, device_ids=[local_rank], find_unused_parameters=True)
+            teacher_model = teacher_model.cuda(local_rank)
+            teacher_model = torch.nn.parallel.DistributedDataParallel(teacher_model, device_ids=[local_rank], find_unused_parameters=True)
         else:
             student_model_train = torch.nn.DataParallel(student_model)
             cudnn.benchmark = True
             student_model_train = student_model_train.cuda()
+            teacher_model = torch.nn.DataParallel(teacher_model)
+            cudnn.benchmark = True
+            teacher_model = teacher_model.cuda()
 
     #---------------------------#
     #   读取数据集对应的txt

@@ -211,7 +211,6 @@ class YOLOLoss(nn.Module):
         #   batch_size, 3, 26, 26, 5 + num_classes
         #   batch_size, 3, 52, 52, 5 + num_classes
         #-----------------------------------------------#
-        print(f"self.anchors_mask: {self.anchors_mask}")
         prediction = input.view(bs, len(self.anchors_mask[l]), self.bbox_attrs, in_h, in_w).permute(0, 1, 3, 4, 2).contiguous()
         
         #-----------------------------------------------#

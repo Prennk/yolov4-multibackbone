@@ -40,7 +40,6 @@ def fit_one_epoch(student_model_train, student_model, teacher_model, yolo_loss, 
             #   计算损失
             #----------------------#
             for l in range(len(student_outputs)):
-                print(f"l di fit: {l}")
                 loss_item = yolo_loss(l, student_outputs[l], targets)
                 loss_value_all  += loss_item
             
@@ -71,17 +70,33 @@ def fit_one_epoch(student_model_train, student_model, teacher_model, yolo_loss, 
                 #----------------------#
                 #   前向传播
                 #----------------------#
-                outputs         = student_model_train(images)
+                student_out0, student_out1, student_out2, student_P5, student_P4, student_P3 = student_model_train(images)
+                student_outputs = (student_out0, student_out1, student_out2)
 
                 loss_value_all  = 0
                 #----------------------#
                 #   计算损失
                 #----------------------#
-                for l in range(len(outputs)):
+                for l in range(len(student_outputs)):
                     with torch.cuda.amp.autocast(enabled=False):
-                        predication = outputs[l].float()
-                    loss_item = yolo_loss(l, predication, targets)
+                        predication = student_outputs[l].float()
+                    loss_item = yolo_loss(l, student_outputs[l], targets)
                     loss_value_all  += loss_item
+
+                    
+                with torch.no_grad():
+                    cross_out0 = teacher_model.yolo_head1(student_P5)
+                    cross_out1 = teacher_model.yolo_head2(student_P4)
+                    cross_out2 = teacher_model.yolo_head3(student_P3)
+                    teacher_out0, teacher_out1, teacher_out2, _, _, _ = teacher_model(images)
+                    teacher_outputs = (teacher_out0, teacher_out1, teacher_out2)
+
+                    loss_kd = yolo_loss.compute_crosskd_loss(
+                        cross_out=(cross_out0, cross_out1, cross_out2),
+                        teacher_outputs=teacher_outputs
+                    )
+                
+                loss_value_all += loss_kd
                 loss_value = loss_value_all
 
             #----------------------#
@@ -120,14 +135,15 @@ def fit_one_epoch(student_model_train, student_model, teacher_model, yolo_loss, 
             #----------------------#
             #   前向传播
             #----------------------#
-            outputs         = student_model_train(images)
+            student_out0, student_out1, student_out2, student_P5, student_P4, student_P3 = student_model_train(images)
+            student_outputs = (student_out0, student_out1, student_out2)
 
             loss_value_all  = 0
             #----------------------#
             #   计算损失
             #----------------------#
-            for l in range(len(outputs)):
-                loss_item = yolo_loss(l, outputs[l], targets)
+            for l in range(len(student_outputs)):
+                loss_item = yolo_loss(l, student_outputs[l], targets)
                 loss_value_all  += loss_item
             loss_value  = loss_value_all
 
