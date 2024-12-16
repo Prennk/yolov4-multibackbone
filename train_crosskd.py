@@ -21,7 +21,7 @@ from utils.callbacks import EvalCallback, LossHistory
 from utils.dataloader import YoloDataset, yolo_dataset_collate
 from utils.utils import (get_anchors, get_classes, seed_everything,
                          show_config, worker_init_fn)
-from utils.utils_fit import fit_one_epoch
+from utils.utils_fit_crosskd import fit_one_epoch
 
 '''
 训练自己的目标检测模型一定需要注意以下几点：
