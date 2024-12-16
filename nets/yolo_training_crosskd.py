@@ -506,21 +506,7 @@ class YOLOLoss(nn.Module):
 
         kd_loss = cls_loss + reg_loss
         return kd_loss
-
-    def forward(self, l, input, targets=None, cross_out=None, teacher_out=None):
-        """
-        Forward pass untuk menghitung deteksi loss dan CrossKD loss.
-        """
-        # Perhitungan detection loss biasa
-        loss = super().forward(l, input, targets)
-
-        # Tambahkan CrossKD Loss jika tersedia
-        if cross_out is not None and teacher_out is not None:
-            kd_loss = self.compute_crosskd_loss(cross_out, teacher_out)
-            loss += kd_loss
-
-        return loss
-
+    
 def weights_init(net, init_type='normal', init_gain = 0.02):
     def init_func(m):
         classname = m.__class__.__name__
