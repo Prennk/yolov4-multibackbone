@@ -135,7 +135,11 @@ class EvalCallback():
             #   将图像输入网络当中进行预测！
             #---------------------------------------------------------#
             outputs = self.net(images)
-            outputs = self.bbox_util.decode_box(outputs)
+            if len(outputs) == 6:
+                student_out0, student_out1, student_out2, _, _, _ = self.bbox_util.decode_box(outputs)
+                outputs = (student_out0, student_out1, student_out2)
+            else:
+                outputs = self.bbox_util.decode_box(outputs)
             #---------------------------------------------------------#
             #   将预测框进行堆叠，然后进行非极大抑制
             #---------------------------------------------------------#
