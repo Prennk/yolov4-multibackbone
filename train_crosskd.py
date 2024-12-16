@@ -75,12 +75,12 @@ if __name__ == "__main__":
     #   classes_path    指向model_data下的txt，与自己训练的数据集相关 
     #                   训练前一定要修改classes_path，使其对应自己的数据集
     #---------------------------------------------------------------------#
-    classes_path    = "classes/road_sign_classes.txt"
+    classes_path    = "classes/license_plate_classes.txt"
     #---------------------------------------------------------------------#
     #   anchors_path    代表先验框对应的txt文件，一般不修改。
     #   anchors_mask    用于帮助代码找到对应的先验框，一般不修改。
     #---------------------------------------------------------------------#
-    anchors_path    = "anchors/road_sign_anchors.txt"
+    anchors_path    = "anchors/license_plate_anchors.txt"
     anchors_mask    = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
     #----------------------------------------------------------------------------------------------------------------------------#
     #   权值文件的下载请看README，可以通过网盘下载。模型的 预训练权重 对不同数据集是通用的，因为特征是通用的。
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     #      可以设置mosaic=True，直接随机初始化参数开始训练，但得到的效果仍然不如有预训练的情况。（像COCO这样的大数据集可以这样做）
     #   2、了解imagenet数据集，首先训练分类模型，获得网络的主干部分权值，分类模型的 主干部分 和该模型通用，基于此进行训练。
     #----------------------------------------------------------------------------------------------------------------------------#
-    teacher_model_path = "pretrained/cspdarknet53_road_sign_vanilla.pth"
+    teacher_model_path = "pretrained/cspdarknet53_license_plate_vanilla.pth"
     student_model_path = ""
     #------------------------------------------------------#
     #   input_shape     输入的shape大小，一定要是32的倍数
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     #                       (当Freeze_Train=False时失效)
     #------------------------------------------------------------------#
     Init_Epoch          = 0
-    Freeze_Epoch        = 300
+    Freeze_Epoch        = 600
     Freeze_batch_size   = 16
     #------------------------------------------------------------------#
     #   解冻阶段训练参数
@@ -201,7 +201,7 @@ if __name__ == "__main__":
     #                           Adam可以使用相对较小的UnFreeze_Epoch
     #   Unfreeze_batch_size     模型在解冻后的batch_size
     #------------------------------------------------------------------#
-    UnFreeze_Epoch      = 600
+    UnFreeze_Epoch      = 1200
     Unfreeze_batch_size = 16
     #------------------------------------------------------------------#
     #   Freeze_Train    是否进行冻结训练
@@ -275,9 +275,9 @@ if __name__ == "__main__":
     #   train_annotation_path   训练图片路径和标签
     #   val_annotation_path     验证图片路径和标签
     #------------------------------------------------------#
-    dataset_name            = "road_sign"
-    train_annotation_path   = "annotations/road_sign_train.txt"
-    val_annotation_path     = "annotations/road_sign_val.txt"
+    dataset_name            = "license_plate"
+    train_annotation_path   = "annotations/license_plate_train.txt"
+    val_annotation_path     = "annotations/license_plate_val.txt"
 
     seed_everything(seed)
     #------------------------------------------------------#
