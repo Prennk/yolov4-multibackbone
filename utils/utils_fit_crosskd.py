@@ -32,7 +32,8 @@ def fit_one_epoch(student_model_train, student_model, teacher_model, yolo_loss, 
             #----------------------#
             #   前向传播
             #----------------------#
-            student_outputs, student_P5, student_P4, student_P3 = student_model_train(images)
+            student_out0, student_out1, student_out2, student_P5, student_P4, student_P3 = student_model_train(images)
+            student_outputs = (student_out0, student_out1, student_out2)
 
             loss_value_all  = 0
             #----------------------#
@@ -47,7 +48,8 @@ def fit_one_epoch(student_model_train, student_model, teacher_model, yolo_loss, 
                 cross_out0 = teacher_model.yolo_head1(student_P5)
                 cross_out1 = teacher_model.yolo_head2(student_P4)
                 cross_out2 = teacher_model.yolo_head3(student_P3)
-                teacher_outputs, _, _, _ = teacher_model(images)
+                teacher_out0, teacher_out1, teacher_out2, _, _, _ = teacher_model(images)
+                teacher_outputs = (teacher_out0, teacher_out1, teacher_out2)
 
                 loss_kd = yolo_loss.compute_crosskd_loss(
                     cross_out=(cross_out0, cross_out1, cross_out2),
