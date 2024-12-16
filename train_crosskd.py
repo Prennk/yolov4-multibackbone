@@ -323,7 +323,7 @@ if __name__ == "__main__":
         #------------------------------------------------------#
         model_dict      = teacher_model.state_dict()
         pretrained_dict = torch.load(teacher_model_path, map_location = device)
-        pretrained_dict = pretrained_dict["model"]
+        pretrained_dict = pretrained_dict["model_state_dict"]
         load_key, no_load_key, temp_dict = [], [], {}
         for k, v in pretrained_dict.items():
             if k in model_dict.keys() and np.shape(model_dict[k]) == np.shape(v):
