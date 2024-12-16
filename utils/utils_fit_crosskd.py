@@ -40,6 +40,7 @@ def fit_one_epoch(student_model_train, student_model, teacher_model, yolo_loss, 
             #   计算损失
             #----------------------#
             for l in range(len(student_outputs)):
+                print(f"l di fit: {l}")
                 loss_item = yolo_loss(l, student_outputs[l], targets)
                 loss_value_all  += loss_item
             
