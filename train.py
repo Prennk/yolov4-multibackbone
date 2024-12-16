@@ -52,15 +52,15 @@ if __name__ == "__main__":
     train_annotation_path = ["annotations/road_sign_train.txt", "annotations/license_plate_train.txt"]
     val_annotation_path = ["annotations/road_sign_val.txt", "annotations/license_plate_val.txt"]
 
-    seed = seed[3]
+    seed = seed[4]
     classes_path = classes_path[1]
     anchors_path = anchors_path[1]
-    model_path = model_path[1]
-    str_pretrained_path = str_pretrained_path[1]
+    model_path = model_path[2]
+    str_pretrained_path = str_pretrained_path[0]
     Freeze_Epoch = Freeze_Epoch[1]
     UnFreeze_Epoch = UnFreeze_Epoch[1]
-    Freeze_Train = Freeze_Train[1]
-    dataset_name = dataset_name[1]
+    Freeze_Train = Freeze_Train[0]
+    dataset_name = "HAPUS_INIIIIIIIIIIIII" # dataset_name[1]
     train_annotation_path = train_annotation_path[1]
     val_annotation_path = val_annotation_path[1]
     #---------------------------------#
@@ -139,8 +139,8 @@ if __name__ == "__main__":
     backbone             = "repvit_m0_6" # repvit_m0_6 / mobilenetv2_05 / cspdarknet53
     str_pretrained_path  = str_pretrained_path
     pretrained_path      = ""
-    resume               = False
-    checkpoint_path      = ""
+    resume               = True
+    checkpoint_path      = "logs/loss_repvit_m0_6_HAPUS_INIIIIIIIIIIIII_seed100/checkpoint.pth"
     #------------------------------------------------------------------#
     #   mosaic              马赛克数据增强。
     #   mosaic_prob         每个step有多少概率使用mosaic数据增强，默认50%。
@@ -543,7 +543,7 @@ if __name__ == "__main__":
                                             eval_flag=eval_flag, period=eval_period)
         else:
             eval_callback   = None
-        
+
         if resume:
             if os.path.exists(checkpoint_path):
                 print("CONTINUE TRAIN")
@@ -554,6 +554,8 @@ if __name__ == "__main__":
                 Init_Epoch = checkpoint["epoch"] + 1
                 print(f"Optimizer: {optimizer}")
                 print(f"Init Epoch: {Init_Epoch}")
+            else:
+                raise ValueError(f"checkpoint_path: {checkpoint_path} not found")
         else:
             print("START NEW TRAIN")
 
