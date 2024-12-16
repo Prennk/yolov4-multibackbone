@@ -423,8 +423,6 @@ if __name__ == "__main__":
             student_model_train = torch.nn.DataParallel(student_model)
             cudnn.benchmark = True
             student_model_train = student_model_train.cuda()
-            teacher_model = torch.nn.DataParallel(teacher_model)
-            cudnn.benchmark = True
             teacher_model = teacher_model.cuda()
 
     #---------------------------#
