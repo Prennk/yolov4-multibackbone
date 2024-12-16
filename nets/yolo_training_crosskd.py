@@ -479,7 +479,7 @@ class YOLOLoss(nn.Module):
                 noobj_mask[b][anch_ious_max > self.ignore_threshold] = 0
         return noobj_mask, pred_boxes
     
-    def compute_crosskd_loss(self, cross_out, teacher_out):
+    def compute_crosskd_loss(self, cross_out, teacher_outputs):
         def quality_focal_loss(pred, target, gamma=2.0):
             pred_sigmoid = torch.sigmoid(pred)
             target_sigmoid = torch.sigmoid(target)
@@ -497,7 +497,7 @@ class YOLOLoss(nn.Module):
         reg_loss = 0
 
         # Iterasi untuk setiap level (P3, P4, P5)
-        for cross, teacher in zip(cross_out, teacher_out):
+        for cross, teacher in zip(cross_out, teacher_outputs):
             # Klasifikasi (Quality Focal Loss)
             cls_loss += quality_focal_loss(cross[..., 4:], teacher[..., 4:]).mean()
 
