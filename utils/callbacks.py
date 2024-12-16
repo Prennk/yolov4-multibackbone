@@ -136,8 +136,9 @@ class EvalCallback():
             #---------------------------------------------------------#
             outputs = self.net(images)
             if len(outputs) == 6:
-                student_out0, student_out1, student_out2, _, _, _ = self.bbox_util.decode_box(outputs)
+                student_out0, student_out1, student_out2, _, _, _ = outputs
                 outputs = (student_out0, student_out1, student_out2)
+                outputs = self.bbox_util.decode_box(outputs)
             else:
                 outputs = self.bbox_util.decode_box(outputs)
             #---------------------------------------------------------#
